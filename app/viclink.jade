@@ -1,0 +1,10 @@
+html(ng-app="viclink")
+	head
+		title VicLink
+		
+		link(href="viclink.css", rel="stylesheet")
+		script(src="min.js")
+
+	body(ng-controller="VicLinkController")
+		.content
+			p Testing {{test}}
