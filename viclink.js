@@ -12,8 +12,7 @@ var stylus = require("stylus");
 var fs = require("fs");
 var ecstatic = require("ecstatic")(__dirname + "/build");
 var router = require("routes")();
-var request = require("request");
-var crypto = require("crypto");
+var ptv = require("./lib/ptv")(process.env.PTV_DEVID, process.env.PTV_KEY);
 
 var routes = { };
 
@@ -39,17 +38,7 @@ routes.styles = function (req, res) {
 router.addRoute("/", routes.render);
 router.addRoute("/*.css", routes.styles);
 
-router.addRoute("/healthcheck", function (req, res) {
-	var sig = sign("/v2/healthcheck?devid=" + process.env.PTV_DEVID);
-
-	request({
-		url: "http://timetableapi.ptv.vic.gov.au/v2/healthcheck",
-		qs: {
-			devid: process.env.PTV_DEVID,
-			signature: sig
-		}
-	}).pipe(res);
-});
+router.addRoute("/healthcheck", ptv.handler);
 
 var viclink = http.createServer(function (req, res) {
 	var route = router.match(req.url);
@@ -62,18 +51,5 @@ var viclink = http.createServer(function (req, res) {
 		ecstatic(req, res);
 	}
 });
-
-function sign(url) {
-	//console.log("URL", url);
-	//console.log("ID", process.env.PTV_DEVID);
-	//console.log("KEY", process.env.PTV_KEY);
-
-	var hmac = crypto.createHmac("sha1", process.env.PTV_KEY);
-	hmac.setEncoding("hex");
-	hmac.write(url);
-	hmac.end();
-
-	return hmac.read().toUpperCase();
-}
 
 viclink.listen(8000);
