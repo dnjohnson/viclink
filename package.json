@@ -22,11 +22,16 @@
 		"transform": [ "browserify-shim" ]
 	},
 	"browser": {
-		"angular": "./app/components/lib/angular.js"
+		"angular": "./app/lib/angular.js",
+		"ui.bootstrap": "./app/lib/ui-bootstrap.js"
 	},
 	"browserify-shim": {
 		"angular": {
 			"exports": "angular"
+		},
+		"ui.bootstrap": {
+			"depends": [ "angular" ],
+			"exports": "uiBootstrap"
 		}
 	},
 	"engines": {
