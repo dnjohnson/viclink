@@ -3,8 +3,14 @@ html(ng-app="viclink")
 		title VicLink
 		
 		link(href="viclink.css", rel="stylesheet")
+
+		script.
+			window.uiBootstrap = "ui.bootstrap";
+
 		script(src="min.js")
 
 	body(ng-controller="VicLinkController")
 		.content
 			p Testing {{test}}
+
+			input(type="text", ng-model="selected", typeahead="station for station in stations | filter:$viewValue | limitTo:10")
